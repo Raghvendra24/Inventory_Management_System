@@ -1,0 +1,18 @@
+package com.raghvendra.inventory.repository;
+
+import com.raghvendra.inventory.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import java.math.BigDecimal;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    @Query("SELECT SUM(p.quantityInStock) FROM Product p")
+    Integer totalQuantity();
+
+    @Query("SELECT SUM(p.quantityInStock * p.unitPrice) FROM Product p")
+    BigDecimal totalValue();
+
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.quantityInStock <= p.reorderLevel")
+    Long countLowStockItems();
+}
